@@ -155,4 +155,29 @@ router.post('/store', function (req, res, next) {
     }
 })
 
+// edit data
+router.get('/edit/(:id)', function (req, res, next) {
+
+    var id = req.params.id
+
+    con.query('SELECT * FROM tbl_student WHERE id = ' + id, function(err, rows, fields) {
+        if (err) throw err
+
+        // jika user tidak ditemukan
+        if (rows.length <= 0) {
+            req.flash('error', 'Data user dgn ID ' + id + ' tidak ditemukan')
+            res.redirect('/students')
+        } else {
+            res.render('students/edit', {
+                id: rows[0].id,
+                firstname: rows[0].firstname,
+                lastname: rows[0].lastname,
+                email: rows[0].email,
+                class: rows[0].class,
+                grade: rows[0].grade
+            });
+        }
+    })
+})
+
 module.exports = router;
